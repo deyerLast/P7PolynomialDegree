@@ -41,34 +41,47 @@ myLast( [_|T], X ) :-
 
 
 
-%addList(_,_,D) :- !.
-addList(C, _, D) :-
+addList(C, 0, D) :-
     D is 0 + C.
 addList(C, B, D) :-
     D is C + B.
 
 
 
-nextItem( _, [], _) :-  !.
-nextItem( N, L, T) :-
+listLength([],L,L).
+listLength([_|Xs],T,L) :-
+	T1 is T + 1,
+	listLength(Xs,T1,L).
+listLength(Xs,L) :-
+	listLength(Xs,0,L).
 
-    NN is N - 1,
-    NN > 0,
+
+nextItem(_, [], _, [X]) :-  !.
+nextItem(A, L, T, RE) :-
+    (listLength(L,A), A = 1,       %WhileLoop
+	%write(A = " :AAA   "),
+        %write(T = " :TTT   "),
+	%write(RE = " :RE   \n"),
+	RE = T;                    %Thing to Return
 
     rowBelow(L,RR),
 
     myLast(RR,C),
-    write("T: " + T - "\n"),
+    write("T: " + RR - "\n"),
     addList(C, T, D),
-write(D + " ADDED \n"),
-    nextItem(NN,RR,D).
+	%RE1 is 0 + D,
+	%write(D + " ADDED \n"),
+    nextItem(A,RR,D,RE)
+    ).
 
 
 
-% The TreeNode and main
+
 nextItem(L,N) :-
-    NN is N ,
     myLast(L,D),
-    nextItem( NN, L, D),
-    write("Answer"),
-    write(D).
+
+    nextItem(C,L,D,RE),
+    N = RE.
+
+
+
