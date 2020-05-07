@@ -10,9 +10,9 @@
 
 
 
-rowBelow([X],[X]) :- !.         % [X] only holds 1 num, not list,       X can hold a list I guess.
+rowBelow([X],[X]) :- !.         
 rowBelow(R,R1) :-               % R is regular list,
-    diffPairs(R, R1).               % R1 is inner row
+    diffPairs(R, R1).               % R1 is inner row / below
 
     %write(R1 * "* \n" ),
     %write(R1 + " ++  "),
@@ -41,16 +41,16 @@ myLast( [_|T], X ) :-
 
 
 
-addList(C, 0, D) :-
+addList(C, 0, D) :- 		 %Initial addition statement
     D is 0 + C.
-addList(C, B, D) :-
+addList(C, B, D) :-		
     D is C + B.
 
 
 
-listLength([],L,L).
+listLength([],L,L).		%So stack doesn't beome to large
 listLength([_|Xs],T,L) :-
-	T1 is T + 1,
+	T1 is T + 1,		%Increment length counter
 	listLength(Xs,T1,L).
 listLength(Xs,L) :-
 	listLength(Xs,0,L).
@@ -58,7 +58,7 @@ listLength(Xs,L) :-
 
 nextItem(_, [], _, [X]) :-  !.
 nextItem(A, L, T, RE) :-
-    (listLength(L,A), A = 1,       %WhileLoop
+    (listLength(L,A), A = 1,       %WhileLoop end if this is true
 	%write(A = " :AAA   "),
         %write(T = " :TTT   "),
 	%write(RE = " :RE   \n"),
@@ -69,18 +69,17 @@ nextItem(A, L, T, RE) :-
     myLast(RR,C),
     write("T: " + RR - "\n"),
     addList(C, T, D),
-	%RE1 is 0 + D,
-	%write(D + " ADDED \n"),
-    nextItem(A,RR,D,RE)
+	%write(D + " ADDED \n"),	%Used to check addition was correct
+    nextItem(A,RR,D,RE)			%Keep looking and checking
     ).
 
 
 
 
-nextItem(L,N) :-
-    myLast(L,D),
+nextItem(L,N) :- %What we call
+    myLast(L,D), 		%last # in original list held in D
 
-    nextItem(C,L,D,RE),
+    nextItem(C,L,D,RE), 	%C is for the counter later, L(list), D(Give original largest number), RE( returned value)
     N = RE.
 
 
