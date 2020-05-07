@@ -11,19 +11,19 @@
 
 
 rowBelow([X],[X]) :- !.         % [X] only holds 1 num, not list,       X can hold a list I guess.
-rowBelow(R,RR) :-               % R is regular list,
-    diffPairs(R, R1),               % R1 is inner row
+rowBelow(R,R1) :-               % R is regular list,
+    diffPairs(R, R1).               % R1 is inner row
 
     %write(R1 * "* \n" ),
-    %write(RR + " ++  "),
+    %write(R1 + " ++  "),
 
-    append(R1,R,RR).                %Flip R1 and R to flip the tree
-
-
+    %append(R1,R,RR).                %Flip R1 and R to flip the tree
 
 
 
-diffPairs([X],[]).              % Only 1 element, no diff
+
+
+diffPairs([_],[]) :- !.              % Only 1 element, no diff
 diffPairs([A,B|Ns], [S|T]) :-
     %write(A),
     S is B-A,                       %diff of first two elements
@@ -34,35 +34,41 @@ diffPairs([A,B|Ns], [S|T]) :-
 
 
 
-
-
-%addEnd( [],[] ).
-addEnd( [A, B |RR], C ) :-
-    C is A + B,
-    write(C - " : THE ADD; ").
-
+myLast( [Head], X ) :-
+    X = Head.
+myLast( [_|T], X ) :-
+    myLast(T,X).
 
 
 
+%addList(_,_,D) :- !.
+addList(C, _, D) :-
+    D is 0 + C.
+addList(C, B, D) :-
+    D is C + B.
 
-nextItem( 0, _, []) :- !.       %Can't count to -inf
-nextItem( N, T, L) :-
+
+
+nextItem( _, [], _) :-  !.
+nextItem( N, L, T) :-
+
     NN is N - 1,
-    NN > -1,
-    %write(NN - "\n"),
-
-
-    %write(L - "\n" ),
+    NN > 0,
 
     rowBelow(L,RR),
 
-    addEnd(RR,C),
-
-    nextItem(NN,C,RR).             %THIS IS THE ISSUE!!!!!!!!!! Needs to rellop to Ln(48)
+    myLast(RR,C),
+    write("T: " + T - "\n"),
+    addList(C, T, D),
+write(D + " ADDED \n"),
+    nextItem(NN,RR,D).
 
 
 
 % The TreeNode and main
 nextItem(L,N) :-
-    nextItem( N, R, L).
-    %write("\n" + R + " = DONE").
+    NN is N ,
+    myLast(L,D),
+    nextItem( NN, L, D),
+    write("Answer"),
+    write(D).
